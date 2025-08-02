@@ -30,7 +30,6 @@ export const registerUser = createAsyncThunk(
         })
       );
       navigate("/login");
-      return response.data.data;
     }catch(error){
       dispatch(
         showToastMessage({
