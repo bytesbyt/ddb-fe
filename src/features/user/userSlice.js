@@ -30,6 +30,7 @@ export const registerUser = createAsyncThunk(
         })
       );
       navigate("/login");
+      return response.data.data;
     }catch(error){
       const response = error.response.data;
       dispatch(
