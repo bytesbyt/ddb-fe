@@ -22,24 +22,23 @@ export const registerUser = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const response = await api.post("/user/", {email, name, password});
+      const response = await api.post("/user", {email, name, password});
       dispatch(
         showToastMessage({
-          message: response.message || "Successfully registered",
+          message: response.data.message || "Successfully registered",
           status: "success",
         })
       );
       navigate("/login");
-      return response.data.data;
+      return response.data;
     }catch(error){
-      const response = error.response.data;
       dispatch(
         showToastMessage({
-          message: error.error || response.message || "Failed to register",
+          message: error.error || error.message || "Failed to register",
           status: "error",
         })
       );
-      return rejectWithValue(error.error);
+      return rejectWithValue(error.error || error.message);
     }
   } 
 );
@@ -68,7 +67,7 @@ const userSlice = createSlice({
     builder.addCase(registerUser.pending, (state) => {
       state.loading = true;
     })
-    .addCase(registerUser.fulfilled, (state, action) => {
+    .addCase(registerUser.fulfilled, (state) => {
       state.loading = false;
       state.registrationError = null;
     })
