@@ -22,10 +22,10 @@ export const registerUser = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const response = await api.post("/users/", {email, name, password});
+      const response = await api.post("/user/", {email, name, password});
       dispatch(
         showToastMessage({
-          message: "Successfully registered",
+          message: response.data.message || "Successfully registered",
           status: "success",
         })
       );
@@ -34,7 +34,7 @@ export const registerUser = createAsyncThunk(
     }catch(error){
       dispatch(
         showToastMessage({
-          message: "Failed to register",
+          message: error.error || error.message || "Failed to register",
           status: "error",
         })
       );
