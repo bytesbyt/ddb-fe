@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./style/login.style.css";
-import { loginWithEmail, loginWithGoogle } from "../../features/user/userSlice";
+import { loginWithEmail } from "../../features/user/userSlice";
 import { clearErrors } from "../../features/user/userSlice";
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -20,7 +20,7 @@ const Login = () => {
     if (loginError) {
       dispatch(clearErrors());
     }
-  }, [navigate]);
+  }, [navigate, dispatch, loginError]);
   const handleLoginWithEmail = (event) => {
     event.preventDefault();
     dispatch(loginWithEmail({ email, password }));
