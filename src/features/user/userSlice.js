@@ -25,15 +25,17 @@ export const registerUser = createAsyncThunk(
       const response = await api.post("/user/", {email, name, password});
       dispatch(
         showToastMessage({
-          message: response.data.message || "Successfully registered",
+          message: response.message || "Successfully registered",
           status: "success",
         })
       );
       navigate("/login");
+      return response.data.data;
     }catch(error){
+      const response = error.response.data;
       dispatch(
         showToastMessage({
-          message: error.error || error.message || "Failed to register",
+          message: error.error || response.message || "Failed to register",
           status: "error",
         })
       );
