@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { showToastMessage } from "../common/uiSlice";
 import api from "../../utils/api";
-import { initialCart } from "../cart/cartSlice";
 
 export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
@@ -15,12 +14,33 @@ export const loginWithGoogle = createAsyncThunk(
 );
 
 export const logout = () => (dispatch) => {};
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
     { email, name, password, navigate },
     { dispatch, rejectWithValue }
-  ) => {}
+  ) => {
+    try {
+      const response = await api.post("/users/", {email, name, password});
+      dispatch(
+        showToastMessage({
+          message: "Successfully registered",
+          status: "success",
+        })
+      );
+      navigate("/login");
+      return response.data.data;
+    }catch(error){
+      dispatch(
+        showToastMessage({
+          message: "Failed to register",
+          status: "error",
+        })
+      );
+      return rejectWithValue(error.error);
+    }
+  } 
 );
 
 export const loginWithToken = createAsyncThunk(
@@ -43,7 +63,18 @@ const userSlice = createSlice({
       state.registrationError = null;
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(registerUser.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(registerUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.registrationError = null;
+    })
+    .addCase(registerUser.rejected, (state, action) => {
+      state.registrationError = action.payload;
+    });
+  },
 });
 export const { clearErrors } = userSlice.actions;
 export default userSlice.reducer;
