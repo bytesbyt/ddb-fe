@@ -31,10 +31,13 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
+    console.log("API Response Success:", response);
     return response;
   },
   function (error) {
-    console.log("RESPONSE ERROR", error.response);
+    console.log("RESPONSE ERROR", error);
+    console.log("Error Response:", error.response);
+    console.log("Error Message:", error.message);
     return Promise.reject(error);
   }
 );
