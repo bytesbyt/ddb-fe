@@ -23,6 +23,7 @@ export const registerUser = createAsyncThunk(
   ) => {
     try {
       const response = await api.post("/user", {email, name, password});
+      console.log("RESPONSE", response);
       dispatch(
         showToastMessage({
           message: response.data.message || "Successfully registered",
