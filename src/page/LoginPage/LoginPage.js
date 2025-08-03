@@ -17,6 +17,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
+    // Redirect if user is already logged in
+    if (user || sessionStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
     // Clear errors when user starts typing
     if (email || password) {
       dispatch(clearErrors());
@@ -31,9 +38,6 @@ const Login = () => {
     //구글 로그인 하기
   };
 
-  if (user) {
-    navigate("/");
-  }
   return (
     <>
       <Container className="login-area">
