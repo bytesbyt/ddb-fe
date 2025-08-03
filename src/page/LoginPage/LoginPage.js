@@ -17,10 +17,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if (loginError) {
+    // Clear errors when component unmounts
+    return () => {
       dispatch(clearErrors());
-    }
-  }, [navigate, dispatch, loginError]);
+    };
+  }, [dispatch]);
   const handleLoginWithEmail = (event) => {
     event.preventDefault();
     dispatch(loginWithEmail({ email, password }));
