@@ -26,12 +26,12 @@ export const registerUser = createAsyncThunk(
       console.log("RESPONSE", response);
       dispatch(
         showToastMessage({
-          message: response.data.message || "Successfully registered",
+          message: "Successfully registered",
           status: "success",
         })
       );
       navigate("/login");
-      return response.data || {};
+      return response.data.data;
     }catch(error){
       const errorMessage = error.response?.data?.error || 
                           error.response?.data?.message || 
