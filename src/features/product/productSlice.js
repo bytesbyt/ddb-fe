@@ -18,14 +18,12 @@ export const createProduct = createAsyncThunk(
   async (formData, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("/product", formData);
-      console.log("responsessssss", response);
-      if (response.status !== 200) {
-        throw new Error(response.error);
-      }
       dispatch(showToastMessage({message: "Product created successfully", status: "success"}))
-      return response.data.data;
+      return response.data.product;
     } catch (error) {
-      return rejectWithValue(error.error);
+      // Error extracted by API interceptor
+      dispatch(showToastMessage({message: error || "Failed to create product", status: "error"}))
+      return rejectWithValue(error);
     }
   }
 );
