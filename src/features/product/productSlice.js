@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../utils/api";
+import { showToastMessage } from "../common/uiSlice";
 
 // 비동기 액션 생성
 export const getProductList = createAsyncThunk(
@@ -13,7 +15,18 @@ export const getProductDetail = createAsyncThunk(
 
 export const createProduct = createAsyncThunk(
   "products/createProduct",
-  async (formData, { dispatch, rejectWithValue }) => {}
+  async (formData, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.post("/product", formData);
+      if (response.status !== 200) {
+        throw new Error(response.error);
+      }
+      dispatch(showToastMessage({message: "Product created successfully", status: "success"}))
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const deleteProduct = createAsyncThunk(
@@ -49,7 +62,21 @@ const productSlice = createSlice({
       state.success = false;
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(createProduct.pending, (state,action) => {
+      state.loading = true;
+    })
+    .addCase(createProduct.fulfilled, (state, action) => {
+      state.loading = false; 
+      state.error = "";
+      state.success = true; //success: close the dialog, else show the error message without closing the dialog
+    })
+    .addCase(createProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.success = false;
+    })
+  },
 });
 
 export const { setSelectedProduct, setFilteredList, clearError } =
