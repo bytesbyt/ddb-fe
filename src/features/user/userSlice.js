@@ -12,7 +12,7 @@ export const loginWithEmail = createAsyncThunk(
       return response.data;
 
     }catch (error){
-      return rejectWithValue(error.response?.data?.error || error.response?.data?.message || error.message);
+      return rejectWithValue(error);
     }
   }
 );
@@ -42,10 +42,7 @@ export const registerUser = createAsyncThunk(
       navigate("/login");
       return response.data.data;
     }catch(error){
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          error.message || 
-                          "Failed to register";
+      const errorMessage = error;
       dispatch(
         showToastMessage({
           message: errorMessage,

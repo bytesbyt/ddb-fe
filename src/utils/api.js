@@ -12,6 +12,7 @@ const api = axios.create({
   baseURL: BACKEND_PROXY,
   headers: {
     "Content-Type": "application/json",
+    authorization: `Bearer ${sessionStorage.getItem("token")}`,
   },
 });
 /**
@@ -20,6 +21,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (request) => {
     console.log("Starting Request", request);
+    request.headers.authorization = `Bearer ${sessionStorage.getItem("token")}`;
     return request;
   },
   function (error) {
@@ -29,13 +31,10 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log("API Response Success:", response);
     return response;
   },
   function (error) {
-    console.log("RESPONSE ERROR", error);
-    console.log("Error Response:", error.response);
-    console.log("Error Message:", error.message);
+    error = error.response.data.error || error.response.data.message || error.message;   
     return Promise.reject(error);
   }
 );
