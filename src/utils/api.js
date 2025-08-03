@@ -34,8 +34,7 @@ api.interceptors.response.use(
     return response;
   },
   function (error) {
-    error = error.response.data;
-    console.log("RESPONSE ERROR", error);
+    console.log("RESPONSE ERROR", error.response);
     return Promise.reject(error);
   }
 );
