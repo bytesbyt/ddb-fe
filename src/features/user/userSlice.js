@@ -33,13 +33,13 @@ export const registerUser = createAsyncThunk(
       navigate("/login");
       return response.data.data;
     }catch(error){
-/*       const errorMessage = error.response?.data?.error || 
+      const errorMessage = error.response?.data?.error || 
                           error.response?.data?.message || 
                           error.message || 
-                          "Failed to register"; */
+                          "Failed to register";
       dispatch(
         showToastMessage({
-          message: error.message,
+          message: errorMessage,
           status: "error",
         })
       );
