@@ -32,13 +32,17 @@ export const registerUser = createAsyncThunk(
       navigate("/login");
       return response.data || {};
     }catch(error){
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          "Failed to register";
       dispatch(
         showToastMessage({
-          message: error.error || error.message || "Failed to register",
+          message: errorMessage,
           status: "error",
         })
       );
-      return rejectWithValue(error.error || error.message);
+      return rejectWithValue(errorMessage);
     }
   } 
 );
