@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -19,7 +19,14 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [passwordError, setPasswordError] = useState("");
   const [policyError, setPolicyError] = useState(false);
-  const { registrationError } = useSelector((state) => state.user);
+  const { registrationError, user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    // Redirect if user is already logged in
+    if (user || sessionStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const register = (event) => {
     event.preventDefault();
