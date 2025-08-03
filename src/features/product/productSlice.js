@@ -16,6 +16,8 @@ export const getProductDetail = createAsyncThunk(
 export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (formData, { dispatch, rejectWithValue }) => {
+    console.log("formDataaaa", formData);
+    console.log("sss", response);
     try {
       const response = await api.post("/product", formData);
       if (response.status !== 200) {
