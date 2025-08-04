@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 
 import "./style/register.style.css";
 
-import { registerUser } from "../../features/user/userSlice";
+import { registerUser, clearErrors } from "../../features/user/userSlice";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -27,6 +27,11 @@ const RegisterPage = () => {
       navigate("/");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    // Clear errors 
+    dispatch(clearErrors());
+  }, [dispatch]);
 
   const register = (event) => {
     event.preventDefault();
