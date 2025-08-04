@@ -24,6 +24,11 @@ const Login = () => {
   }, [user, navigate]);
 
   useEffect(() => {
+    // Clear errors
+    dispatch(clearErrors());
+  }, [dispatch]);
+
+  useEffect(() => {
     // Clear errors when user starts typing
     if (email || password) {
       dispatch(clearErrors());
