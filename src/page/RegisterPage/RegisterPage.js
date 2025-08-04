@@ -31,7 +31,7 @@ const RegisterPage = () => {
   useEffect(() => {
     // Clear errors 
     dispatch(clearErrors());
-  }, []);
+  }, [dispatch]);
 
   const register = (event) => {
     event.preventDefault();
