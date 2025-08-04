@@ -30,6 +30,7 @@ const RegisterPage = () => {
 
   useEffect(() => {
     // Clear errors 
+    console.log("RegisterPage mounted - clearing errors");
     dispatch(clearErrors());
   }, [dispatch]);
 
