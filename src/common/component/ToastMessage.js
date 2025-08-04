@@ -1,8 +1,9 @@
 import React from "react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { hideToastMessage } from "../../features/common/uiSlice";
 
 const ToastMessage = () => {
   const { toastMessage } = useSelector((state) => state.ui);

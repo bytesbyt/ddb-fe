@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import "./style/register.style.css";
 
 import { registerUser, clearErrors } from "../../features/user/userSlice";
+import { hideToastMessage } from "../../features/common/uiSlice";
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -29,8 +30,9 @@ const RegisterPage = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    // Clear errors 
+    // Clear errors and toast messages when component mounts
     dispatch(clearErrors());
+    dispatch(hideToastMessage());
   }, [dispatch]);
 
   const register = (event) => {

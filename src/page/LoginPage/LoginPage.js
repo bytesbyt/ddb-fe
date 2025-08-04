@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./style/login.style.css";
-import { loginWithEmail } from "../../features/user/userSlice";
-import { clearErrors } from "../../features/user/userSlice";
+import { loginWithEmail, clearErrors } from "../../features/user/userSlice";
+import { hideToastMessage } from "../../features/common/uiSlice";
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const Login = () => {
@@ -24,8 +24,9 @@ const Login = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    // Clear errors
+    // Clear errors and toast messages
     dispatch(clearErrors());
+    dispatch(hideToastMessage());
   }, [dispatch]);
 
   useEffect(() => {
