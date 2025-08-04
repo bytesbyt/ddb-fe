@@ -8,6 +8,7 @@ import {
   clearError,
   createProduct,
   editProduct,
+  getProductList,
 } from "../../../features/product/productSlice";
 
 
@@ -41,8 +42,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
 
   useEffect(() => {
-    if (success) setShowDialog(false);
-  }, [success]);
+    if (success) {
+      setShowDialog(false);
+      // Refresh the product list after successful creation/edit
+      dispatch(getProductList());
+    }
+  }, [success, dispatch]);
 
   useEffect(() => {
     if (error || !success) {
