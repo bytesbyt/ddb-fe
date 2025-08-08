@@ -6,14 +6,12 @@ import { showToastMessage } from "../common/uiSlice";
 export const getProductList = createAsyncThunk(
   "products/getProductList",
   async (query, { rejectWithValue }) => {
-    try{
-      const response = await api.get("/product", {params:{...query}});
+    try {
+      const response = await api.get("/product", { params: { ...query } });
 
-      
-      if(response.status!==200) throw new Error (response.error);
+      if (response.status !== 200) throw new Error(response.error);
       return response.data;
-
-    }catch (error){
+    } catch (error) {
       return rejectWithValue(error.error);
     }
   }
@@ -29,23 +27,76 @@ export const createProduct = createAsyncThunk(
   async (formData, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("/product", formData);
-      dispatch(showToastMessage({message: "Product created successfully", status: "success"}))
+      dispatch(
+        showToastMessage({
+          message: "Product created successfully",
+          status: "success",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
       return response.data.product;
     } catch (error) {
-      dispatch(showToastMessage({message: error || "Failed to create product", status: "error"}))
-      return rejectWithValue(error);
+      dispatch(
+        showToastMessage({
+          message: error || "Failed to create product",
+          status: "error",
+        })
+      );
+      return rejectWithValue(error.error);
     }
   }
 );
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id, { dispatch, rejectWithValue }) => {}
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/product/${id}`);
+      if (response.status !== 200) throw new Error(response.error);
+      dispatch(
+        showToastMessage({
+          message: "Product deleted successfully",
+          status: "success",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return response.data;
+    } catch (error) {
+      dispatch(
+        showToastMessage({
+          message: error || "Failed to delete product",
+          status: "error",
+        })
+      );
+      return rejectWithValue(error);
+    }
+  }
 );
 
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {}
+  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.put(`/product/${id}`, formData);
+      if (response.status !== 200) throw new Error(response.error);
+      dispatch(
+        showToastMessage({
+          message: "Product updated successfully",
+          status: "success",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return response.data.data;
+    } catch (error) {
+      dispatch(
+        showToastMessage({
+          message: error || "Failed to update product",
+          status: "error",
+        })
+      );
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 // 슬라이스 생성
@@ -72,32 +123,60 @@ const productSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(createProduct.pending, (state,action) => {
-      state.loading = true;
-    })
-    .addCase(createProduct.fulfilled, (state, action) => {
-      state.loading = false; 
-      state.error = "";
-      state.success = true;
-    })
-    .addCase(createProduct.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-      state.success = false;
-    })
-    .addCase(getProductList.pending, (state, action) => {
-      state.loading = true;
-    })
-    .addCase(getProductList.fulfilled, (state, action) => {
-      state.loading = false;
-      state.productList = action.payload.data || [];
-      state.error = "";
-      state.totalPageNum = action.payload.totalPageNum !== undefined ? action.payload.totalPageNum : 1;
-    })
-    .addCase(getProductList.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    })
+    builder
+      .addCase(createProduct.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        state.success = true;
+      })
+      .addCase(createProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(getProductList.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getProductList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.productList = action.payload.data || [];
+        state.error = "";
+        state.totalPageNum =
+          action.payload.totalPageNum !== undefined
+            ? action.payload.totalPageNum
+            : 1;
+      })
+      .addCase(getProductList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(editProduct.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(editProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        state.success = true;
+      })
+      .addCase(editProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(deleteProduct.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

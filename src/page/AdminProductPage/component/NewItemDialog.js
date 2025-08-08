@@ -112,6 +112,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       dispatch(createProduct({...formData, stock: totalstock}));
     } else {
       // 상품 수정하기
+      dispatch(editProduct({...formData, stock: totalstock, id: selectedProduct._id}))
     }
   };
 
