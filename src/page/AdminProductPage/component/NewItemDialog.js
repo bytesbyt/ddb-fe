@@ -146,6 +146,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleStockChange = (value, index) => {
     //재고 수량 변환하기
+    // Prevent negative numbers
+    const numValue = parseInt(value);
+    if (numValue < 0) return;
+    
     const newStock = [...stock];
     newStock[index][1] = value;
     setStock(newStock);
@@ -274,6 +278,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     type="number"
                     placeholder="number of stock"
                     value={item[1]}
+                    min="0"
                     required
                   />
                 </Col>
@@ -312,6 +317,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
               onChange={handleChange}
               type="number"
               placeholder="0"
+              min="0"
             />
           </Form.Group>
 
