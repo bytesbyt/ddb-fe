@@ -78,7 +78,7 @@ const productSlice = createSlice({
     .addCase(createProduct.fulfilled, (state, action) => {
       state.loading = false; 
       state.error = "";
-      state.success = true; //success: close the dialog, else show the error message without closing the dialog
+      state.success = true;
     })
     .addCase(createProduct.rejected, (state, action) => {
       state.loading = false;
