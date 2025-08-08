@@ -128,6 +128,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const addStock = () => {
     //재고타입 추가시 배열에 새 배열 추가
     setStock([...stock, ["", 0]]);
+    setStockError(false); // Clear error when adding stock
   };
 
   const deleteStock = (idx) => {
@@ -142,6 +143,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     const newStock = [...stock];
     newStock[index][0] = value;  
     setStock(newStock);
+    setStockError(false); // Clear error when size changes
   };
 
   const handleStockChange = (value, index) => {
@@ -153,6 +155,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     const newStock = [...stock];
     newStock[index][1] = value;
     setStock(newStock);
+    setStockError(false); // Clear error when stock quantity changes
   };
 
   const onHandleCategory = (event) => {
