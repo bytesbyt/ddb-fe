@@ -45,15 +45,24 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     if (success) {
       setShowDialog(false);
       // Refresh the product list after successful creation/edit
-      dispatch(getProductList());
+      dispatch(getProductList({ page: 1 }));
+      // Clear success state after closing dialog
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 100);
     }
   }, [success, dispatch]);
 
   useEffect(() => {
-    if (error || !success) {
-      dispatch(clearError());
-    }
     if (showDialog) {
+      // Clear errors when dialog opens, but only if we're not in the middle of a successful operation
+      if (!success) {
+        dispatch(clearError());
+      }
+      
+      // Clear stock error when dialog opens
+      setStockError(false);
+      
       if (mode === "edit") {
         setFormData(selectedProduct);
         // 객체형태로 온 stock을  다시 배열로 세팅해주기
@@ -71,7 +80,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleClose = () => {
     //모든걸 초기화시키고;
+    setFormData({ ...InitialFormData });
+    setStock([]);
+    setStockError(false);
+    dispatch(clearError());
     // 다이얼로그 닫아주기
+    setShowDialog(false);
   };
 
   const handleSubmit = (event) => {
@@ -165,7 +179,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   return (
     <Modal show={showDialog} onHide={handleClose}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton onHide={handleClose}>
         {mode === "new" ? (
           <Modal.Title>Create New Product</Modal.Title>
         ) : (

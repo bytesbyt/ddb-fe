@@ -7,9 +7,12 @@ export const getProductList = createAsyncThunk(
   "products/getProductList",
   async (query, { rejectWithValue }) => {
     try{
-      const response = await api.get("/product");
+      const response = await api.get("/product", {params:{...query}});
+
+      
       if(response.status!==200) throw new Error (response.error);
-      return response.data.data;
+      return response.data;
+
     }catch (error){
       return rejectWithValue(error.error);
     }
@@ -29,7 +32,6 @@ export const createProduct = createAsyncThunk(
       dispatch(showToastMessage({message: "Product created successfully", status: "success"}))
       return response.data.product;
     } catch (error) {
-      // Error extracted by API interceptor
       dispatch(showToastMessage({message: error || "Failed to create product", status: "error"}))
       return rejectWithValue(error);
     }
@@ -88,8 +90,9 @@ const productSlice = createSlice({
     })
     .addCase(getProductList.fulfilled, (state, action) => {
       state.loading = false;
-      state.productList = action.payload;
+      state.productList = action.payload.data || [];
       state.error = "";
+      state.totalPageNum = action.payload.totalPageNum !== undefined ? action.payload.totalPageNum : 1;
     })
     .addCase(getProductList.rejected, (state, action) => {
       state.loading = false;

@@ -1,15 +1,16 @@
 import axios from "axios";
 
 const LOCAL_BACKEND = `${process.env.REACT_APP_LOCAL_BACKEND}/api`;
-const PROD_BACKEND = `${process.env.REACT_APP_PROD_BACKEND}/api`;
+//const PROD_BACKEND = `${process.env.REACT_APP_PROD_BACKEND}/api`;
 const BACKEND_PROXY = `${process.env.REACT_APP_BACKEND_PROXY}/api`;
 // console.log("proxy", BACKEND_PROXY);
+console.log("local", LOCAL_BACKEND);
 
-// Use production backend if available, otherwise use local
-const baseURL = PROD_BACKEND || LOCAL_BACKEND;
+// Use backend if available, otherwise use local
+const baseURLs = BACKEND_PROXY || LOCAL_BACKEND;
 
 const api = axios.create({
-  baseURL: BACKEND_PROXY,
+  baseURL: LOCAL_BACKEND,
   headers: {
     "Content-Type": "application/json",
     authorization: `Bearer ${sessionStorage.getItem("token")}`,
