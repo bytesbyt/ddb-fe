@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -8,7 +8,7 @@ import {
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 
@@ -17,6 +17,8 @@ const Navbar = ({ user }) => {
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
+  const [query] = useSearchParams();
+  const [keyword, setKeyword] = useState(query.get("name") || "");
   const menuList = [
     "여성",
     "Divided",
@@ -29,12 +31,17 @@ const Navbar = ({ user }) => {
   ];
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
+
+  useEffect(() => {
+    setKeyword(query.get("name") || "");
+  }, [query]);
+
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       if (event.target.value === "") {
-        return navigate("/");
+        return navigate("/?page=1");
       }
-      navigate(`?name=${event.target.value}`);
+      navigate(`/?page=1&name=${event.target.value}`);
     }
   };
   const handleLogout = () => {
@@ -50,6 +57,8 @@ const Navbar = ({ user }) => {
               <input
                 type="text"
                 placeholder="제품검색"
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
                 onKeyPress={onCheckEnter}
               />
             </div>
@@ -141,6 +150,8 @@ const Navbar = ({ user }) => {
             <input
               type="text"
               placeholder="제품검색"
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
               onKeyPress={onCheckEnter}
             />
           </div>

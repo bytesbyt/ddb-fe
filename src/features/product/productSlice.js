@@ -19,7 +19,15 @@ export const getProductList = createAsyncThunk(
 
 export const getProductDetail = createAsyncThunk(
   "products/getProductDetail",
-  async (id, { rejectWithValue }) => {}
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/product/${id}`);
+      if (response.status !== 200) throw new Error(response.error);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
 );
 
 export const createProduct = createAsyncThunk(
@@ -150,6 +158,18 @@ const productSlice = createSlice({
             : 1;
       })
       .addCase(getProductList.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getProductDetail.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getProductDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedProduct = action.payload;
+        state.error = "";
+      })
+      .addCase(getProductDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

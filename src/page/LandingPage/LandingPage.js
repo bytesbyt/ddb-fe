@@ -13,30 +13,24 @@ const LandingPage = () => {
   const { productList, totalPageNum, loading } = useSelector((state) => state.product);
   const [query] = useSearchParams();
   const name = query.get("name");
-  const [searchQuery, setSearchQuery] = useState({
-    page: query.get("page") || 1,
-    name: query.get("name") || "",
-  });
+  const page = query.get("page") || 1;
 
   useEffect(() => {
     dispatch(
       getProductList({
-        ...searchQuery,
+        page: page,
+        name: name || "",
       })
     );
-  }, [query]);
-
-  useEffect(() => {
-    if (searchQuery.name === "") {
-      delete searchQuery.name;
-    }
-    const params = new URLSearchParams(searchQuery);
-    const queryString = params.toString();
-    navigate("?" + queryString);
-  }, [searchQuery]);
+  }, [query, dispatch]);
 
   const handlePageClick = ({ selected }) => {
-    setSearchQuery({ ...searchQuery, page: selected + 1 });
+    const searchParams = new URLSearchParams();
+    searchParams.set("page", selected + 1);
+    if (name) {
+      searchParams.set("name", name);
+    }
+    navigate("?" + searchParams.toString());
   };
 
   return (
@@ -66,7 +60,7 @@ const LandingPage = () => {
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
           pageCount={totalPageNum}
-          forcePage={searchQuery.page - 1}
+          forcePage={page - 1}
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"
