@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { showToastMessage } from "../common/uiSlice";
+import { initialCart } from "../cart/cartSlice";
 import api from "../../utils/api";
 
 export const loginWithEmail = createAsyncThunk(
@@ -28,6 +29,7 @@ export const loginWithGoogle = createAsyncThunk(
 export const logout = () => (dispatch) => {
   sessionStorage.removeItem("token");
   dispatch(userSlice.actions.logout());
+  dispatch(initialCart());
 };
 
 export const registerUser = createAsyncThunk(
