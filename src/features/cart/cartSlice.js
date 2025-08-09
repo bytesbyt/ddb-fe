@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../utils/api";
+import { showToastMessage } from "../common/uiSlice";
 
 const initialState = {
   loading: false,
@@ -12,7 +14,23 @@ const initialState = {
 // Async thunk actions
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ id, size }, { rejectWithValue, dispatch }) => {}
+  async ({ id, size }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.post("/cart", {productId: id, size, qty: 1});
+      if (response.status !== 200)  throw new Error(response.error);
+      dispatch (showToastMessage ({
+        message: "Added to cart",
+        status: "success",
+      }))
+      return response.data; //TODO: 카트 리스트 업데이트 필요
+    } catch (error) {
+      dispatch(showToastMessage({
+        message: error.error || "Failed to add to cart",
+        status: "error",
+      }))
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const getCartList = createAsyncThunk(
@@ -44,7 +62,21 @@ const cartSlice = createSlice({
     },
     // You can still add reducers here for non-async actions if necessary
   },
-  extraReducers: (builder) => {},
+
+  extraReducers: (builder) => {
+    builder.addCase(addToCart.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(addToCart.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      // TODO: 카트 리스트 업데이트 필요
+    });
+    builder.addCase(addToCart.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+  },
 });
 
 export default cartSlice.reducer;
