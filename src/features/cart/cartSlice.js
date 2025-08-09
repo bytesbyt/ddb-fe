@@ -52,12 +52,44 @@ export const getCartList = createAsyncThunk(
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
-  async (id, { rejectWithValue, dispatch }) => {}
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.delete(`/cart/${id}`);
+      if (response.status !== 200) throw new Error(response.error);
+      dispatch(showToastMessage({
+        message: "Item removed from cart",
+        status: "success",
+      }));
+      return { deletedItemId: id, cartItemQty: response.data.cartItemQty };
+    } catch (error) {
+      dispatch(showToastMessage({
+        message: error.error || "Failed to remove item from cart",
+        status: "error",
+      }));
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const updateQty = createAsyncThunk(
   "cart/updateQty",
-  async ({ id, value }, { rejectWithValue }) => {}
+  async ({ id, value }, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.put(`/cart/${id}`, { qty: value });
+      if (response.status !== 200) throw new Error(response.error);
+      dispatch(showToastMessage({
+        message: "Quantity updated",
+        status: "success",
+      }));
+      return response.data.data;
+    } catch (error) {
+      dispatch(showToastMessage({
+        message: error.error || "Failed to update quantity",
+        status: "error",
+      }));
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const getCartQty = createAsyncThunk(
@@ -114,6 +146,39 @@ const cartSlice = createSlice({
     });
     builder.addCase(getCartQty.fulfilled, (state, action) => {
       state.cartItemCount = action.payload;
+    });
+    builder.addCase(deleteCartItem.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteCartItem.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      const deletedItemId = action.payload.deletedItemId;
+      state.cartList = state.cartList.filter(item => item._id !== deletedItemId);
+      state.cartItemCount = action.payload.cartItemQty;
+      state.totalPrice = state.cartList.reduce(
+        (total, item) => total + item.productId.price * item.qty, 0
+      );
+    });
+    builder.addCase(deleteCartItem.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(updateQty.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateQty.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      state.cartList = action.payload;
+      state.cartItemCount = action.payload.length;
+      state.totalPrice = action.payload.reduce(
+        (total, item) => total + item.productId.price * item.qty, 0
+      );
+    });
+    builder.addCase(updateQty.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });
