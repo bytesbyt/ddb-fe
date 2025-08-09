@@ -22,7 +22,7 @@ export const addToCart = createAsyncThunk(
         message: "Added to cart",
         status: "success",
       }))
-      return response.data; //TODO: 카트 리스트 업데이트 필요
+      return response.data.cartItemQty;
     } catch (error) {
       dispatch(showToastMessage({
         message: error.error || "Failed to add to cart",
@@ -35,7 +35,19 @@ export const addToCart = createAsyncThunk(
 
 export const getCartList = createAsyncThunk(
   "cart/getCartList",
-  async (_, { rejectWithValue, dispatch }) => {}
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.get("/cart");
+      if (response.status !== 200) throw new Error(response.error);
+      return response.data.data;
+    } catch (error) {
+      dispatch(showToastMessage({
+        message: error.error || "Failed to get cart list",
+        status: "error",
+      }));
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 export const deleteCartItem = createAsyncThunk(
@@ -50,7 +62,15 @@ export const updateQty = createAsyncThunk(
 
 export const getCartQty = createAsyncThunk(
   "cart/getCartQty",
-  async (_, { rejectWithValue, dispatch }) => {}
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.get("/cart/qty");
+      if (response.status !== 200) throw new Error(response.error);
+      return response.data.qty;
+    } catch (error) {
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 const cartSlice = createSlice({
@@ -70,11 +90,30 @@ const cartSlice = createSlice({
     builder.addCase(addToCart.fulfilled, (state, action) => {
       state.loading = false;
       state.error = "";
-      // TODO: 카트 리스트 업데이트 필요
+      state.cartItemCount = action.payload;
     });
     builder.addCase(addToCart.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    });
+    builder.addCase(getCartList.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(getCartList.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      state.cartList = action.payload;
+      state.cartItemCount = action.payload.length;
+      state.totalPrice = action.payload.reduce(
+        (total, item) => total + item.productId.price * item.qty, 0
+      );
+    });
+    builder.addCase(getCartList.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    builder.addCase(getCartQty.fulfilled, (state, action) => {
+      state.cartItemCount = action.payload;
     });
   },
 });
