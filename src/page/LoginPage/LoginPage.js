@@ -45,58 +45,71 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Container className="login-area">
+    <div className="login-container">
+      <div className="login-box">
+        <h1 className="login-title">Log in to DDB</h1>
+        
         {loginError && (
-          <div className="error-message">
-            <Alert variant="danger">{loginError}</Alert>
+          <div className="login-error">
+            {loginError}
           </div>
         )}
-        <Form className="login-form" onSubmit={handleLoginWithEmail}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
+        
+        <form className="login-form" onSubmit={handleLoginWithEmail}>
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              id="email"
               type="email"
-              placeholder="Enter email"
+              className="form-input"
+              placeholder="you@example.com"
               required
+              value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
-          </Form.Group>
+          </div>
 
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              id="password"
               type="password"
-              placeholder="Password"
+              className="form-input"
+              placeholder="Enter your password"
               required
+              value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
-          </Form.Group>
-          <div className="display-space-between login-button-area">
-            <Button variant="danger" type="submit">
-              Login
-            </Button>
-            <div>
-              아직 계정이 없으세요?<Link to="/register">회원가입 하기</Link>{" "}
-            </div>
           </div>
 
-          <div className="text-align-center mt-2">
-            <p>-외부 계정으로 로그인하기-</p>
-            <div className="display-center">
-              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                <GoogleLogin
-                  onSuccess={handleGoogleLogin}
-                  onError={() => {
-                    console.log("Login Failed");
-                  }}
-                />
-              </GoogleOAuthProvider>
-            </div>
+          <button type="submit" className="login-btn">
+            Log In
+          </button>
+
+          <div className="divider">
+            <span>or sign in with</span>
           </div>
-        </Form>
-      </Container>
-    </>
+
+          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+              text="signin_with"
+              shape="rectangular"
+              size="large"
+              width="100%"
+              theme="outline"
+            />
+          </GoogleOAuthProvider>
+
+          <div className="signup-link">
+            Don't have an account? <Link to="/register">Sign up</Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 
