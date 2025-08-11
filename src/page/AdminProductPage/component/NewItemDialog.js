@@ -104,15 +104,17 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     }, {});
     //console.log("totalstock", totalstock);
 
-
+    // Extract sizes from stock array to create size array
+    const sizeArray = stock.map(item => item[0]);
+    console.log("sizeArray", sizeArray);
 
     
     if (mode === "new") {
       //새 상품 만들기
-      dispatch(createProduct({...formData, stock: totalstock}));
+      dispatch(createProduct({...formData, stock: totalstock, size: sizeArray}));
     } else {
       // 상품 수정하기
-      dispatch(editProduct({...formData, stock: totalstock, id: selectedProduct._id}))
+      dispatch(editProduct({...formData, stock: totalstock, size: sizeArray, id: selectedProduct._id}))
     }
   };
 

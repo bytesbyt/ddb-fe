@@ -7,7 +7,6 @@ import { hideToastMessage } from "../../features/common/uiSlice";
 
 const ToastMessage = () => {
   const { toastMessage } = useSelector((state) => state.ui);
-  console.log("here", toastMessage);
   useEffect(() => {
     if (toastMessage) {
       const { message, status } = toastMessage;

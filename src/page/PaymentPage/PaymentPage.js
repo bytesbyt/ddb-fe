@@ -26,8 +26,11 @@ const PaymentPage = () => {
     contact: "",
     address: "",
     city: "",
-    zip: "",
+    postalCode: "",
   });
+  const { cartList, totalPrice } = useSelector((state) => state.cart);
+
+  // console.log("shipInfo", shipInfo);
 
   useEffect(() => {
     // 오더번호를 받으면 어디로 갈까?
@@ -36,22 +39,50 @@ const PaymentPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // 오더 생성하기
+    const {firstName, lastName, contact, address, city, postalCode} = shipInfo;
+    const shipTo = {
+      address: address,
+      city: city,
+      postalCode: postalCode,
+    }
+    const contactInfo = {
+      firstName: firstName,
+      lastName: lastName,
+      contact: contact,
+    }
+    const orderList = cartList.map((item) => {
+      return {
+      productId: item.productId._id,
+      price: item.productId.price,
+      qty: item.qty,
+      size: item.size,
+    }});
+    dispatch(createOrder({ totalPrice, shipTo, contactInfo, orderList }));
   };
 
   const handleFormChange = (event) => {
     //shipInfo에 값 넣어주기
+    const { name, value } = event.target;
+    setShipInfo({ ...shipInfo, [name]: value });
   };
 
   const handlePaymentInfoChange = (event) => {
     //카드정보 넣어주기
+    const { name, value } = event.target;
+    if (name === "expiry") {
+      let newValue = cc_expires_format(value);
+      setCardValue({ ...cardValue, [name]: newValue });
+      return;
+    }
+    setCardValue({ ...cardValue, [name]: value });
   };
 
   const handleInputFocus = (e) => {
     setCardValue({ ...cardValue, focus: e.target.name });
   };
-  // if (cartList?.length === 0) {
-  //   navigate("/cart");
-  // }// 주문할 아이템이 없다면 주문하기로 안넘어가게 막음
+  if (cartList?.length === 0) {
+    navigate("/cart");
+  }
   return (
     <Container>
       <Row>
@@ -85,7 +116,7 @@ const PaymentPage = () => {
                 <Form.Group className="mb-3" controlId="formGridAddress1">
                   <Form.Label>Contact</Form.Label>
                   <Form.Control
-                    placeholder="010-xxx-xxxxx"
+                    placeholder=""
                     onChange={handleFormChange}
                     required
                     name="contact"
@@ -122,10 +153,15 @@ const PaymentPage = () => {
                   </Form.Group>
                 </Row>
                 <div className="mobile-receipt-area">
-                  {/* <OrderReceipt /> */}
+                  <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
                 </div>
                 <div>
                   <h2 className="payment-title">Payment Information</h2>
+                  <PaymentForm
+                    cardValue={cardValue}
+                    handlePaymentInfoChange={handlePaymentInfoChange}
+                    handleInputFocus={handleInputFocus}
+                  />
                 </div>
 
                 <Button
@@ -140,7 +176,7 @@ const PaymentPage = () => {
           </div>
         </Col>
         <Col lg={5} className="receipt-area">
-          {/* <OrderReceipt  /> */}
+          <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
         </Col>
       </Row>
     </Container>

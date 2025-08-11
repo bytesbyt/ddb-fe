@@ -3,7 +3,6 @@ import axios from "axios";
 const LOCAL_BACKEND = `${process.env.REACT_APP_LOCAL_BACKEND}/api`;
 const PROD_BACKEND = `${process.env.REACT_APP_PROD_BACKEND}/api`;
 //const BACKEND_PROXY = `${process.env.REACT_APP_BACKEND_PROXY}/api`;
-// console.log("proxy", BACKEND_PROXY);
 
 
 // Use backend if available, otherwise use local
@@ -16,17 +15,15 @@ const api = axios.create({
     authorization: `Bearer ${sessionStorage.getItem("token")}`,
   },
 });
-/**
- * console.log all requests and responses
- */
+
 api.interceptors.request.use(
   (request) => {
-    console.log("Starting Request", request);
+    //console.log("Starting Request", request);
     request.headers.authorization = `Bearer ${sessionStorage.getItem("token")}`;
     return request;
   },
   function (error) {
-    console.log("REQUEST ERROR", error);
+    //console.log("REQUEST ERROR", error);
   }
 );
 
