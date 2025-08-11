@@ -3,13 +3,50 @@ body{
   background-color: #FAF9F8;
 }
 
+/* Hero Video */
+.hero-video-container {
+  position: relative;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  margin-bottom: 40px;
+  margin-top: 0;
+}
+
+.hero-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+}
+
 /* Navbar Wrapper */
 .navbar-wrapper {
-  margin-bottom: 30px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: transparent;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-visible {
+  transform: translateY(0);
+}
+
+.navbar-hidden {
+  transform: translateY(-100%);
 }
 
 .navbar-container {
   padding: 0 20px;
+  background-color: transparent;
 }
 
 /* Admin Row */
@@ -21,10 +58,11 @@ body{
 }
 
 .admin-link {
-  color: #000;
+  color: #fff;
   text-decoration: none;
   font-size: 14px;
   cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .admin-link:hover {
@@ -67,30 +105,34 @@ body{
   gap: 8px;
   cursor: pointer;
   font-size: 14px;
+  color: #fff;
 }
 
 .nav-icon-with-text svg {
   font-size: 18px;
+  color: #fff;
 }
 
 .nav-icon {
   cursor: pointer;
   font-size: 20px;
   position: relative;
+  color: #fff;
 }
 
 .cart-icon {
   position: relative;
   cursor: pointer;
   font-size: 20px;
+  color: #fff;
 }
 
 .cart-count {
   position: absolute;
   top: -8px;
   right: -10px;
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
   border-radius: 50%;
   width: 18px;
   height: 18px;
@@ -129,10 +171,11 @@ body{
 }
 
 .menu-link {
-  color: #000;
+  color: #fff;
   text-decoration: none;
   font-size: 14px;
   cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .menu-link:hover {
@@ -144,6 +187,7 @@ body{
   cursor: pointer;
   position: absolute;
   left: 0;
+  color: #fff;
 }
 
 .sidebar{
@@ -155,12 +199,14 @@ body{
 }
 
 .search-box{
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
   display: flex;
   align-items: center;
   padding: 5px;
   width: 100%;
   max-width: 500px;
+  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .search-box input{
   border:none;
@@ -168,6 +214,13 @@ body{
   background: transparent;
   flex: 1;
   font-size: 14px;
+  color: #fff;
+}
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+.search-box svg {
+  color: #fff;
 }
 .search-box input:focus {
   outline:none

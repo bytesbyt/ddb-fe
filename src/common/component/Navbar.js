@@ -18,6 +18,8 @@ const Navbar = ({ user }) => {
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [query] = useSearchParams();
   const [keyword, setKeyword] = useState(query.get("name") || "");
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const menuList = [
     "Women",
     "Divided",
@@ -35,6 +37,28 @@ const Navbar = ({ user }) => {
     setKeyword(query.get("name") || "");
   }, [query]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        // Scrolling down & past 80px
+        setIsVisible(false);
+      } else {
+        // Scrolling up or at top
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
+
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       if (event.target.value === "") {
@@ -47,7 +71,7 @@ const Navbar = ({ user }) => {
     dispatch(logout());
   };
   return (
-    <div className="navbar-wrapper">
+    <div className={`navbar-wrapper ${isVisible ? 'navbar-visible' : 'navbar-hidden'}`}>
       <div className="side-menu" style={{ width: width }}>
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;

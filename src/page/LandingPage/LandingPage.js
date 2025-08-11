@@ -34,8 +34,24 @@ const LandingPage = () => {
   };
 
   return (
-    <Container>
-      <Row>
+    <>
+      <div className="hero-video-container">
+        <video 
+          className="hero-video"
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+        >
+          <source 
+            src="https://www.net-a-porter.com/content/images/cms/ycm/resource/blob/2672014/5b3241fab57780626773d957e6dfdece/desktop-video-data.mp4" 
+            type="video/mp4" 
+          />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <Container>
+        <Row>
         {loading ? (
           <LoadingSpinner />
         ) : productList.length > 0 ? (
@@ -79,6 +95,7 @@ const LandingPage = () => {
         />
       )}
     </Container>
+    </>
   );
 };
 
