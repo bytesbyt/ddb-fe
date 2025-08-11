@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router-dom";
 
 import "./style/register.style.css";
 
@@ -38,9 +37,16 @@ const RegisterPage = () => {
   const register = (event) => {
     event.preventDefault();
     const { name, email, password, confirmPassword, policy } = formData;
+    
+    // Check password length
+    if (password.length < 6) {
+      setPasswordError("Minimum 6 characters.");
+      return;
+    }
+    
     const checkConfirmPassword = password === confirmPassword;
     if (!checkConfirmPassword) {
-      setPasswordError("비밀번호 중복확인이 일치하지 않습니다.");
+      setPasswordError("Passwords do not match.");
       return;
     }
     if (!policy) {
@@ -65,74 +71,101 @@ const RegisterPage = () => {
   };
 
   return (
-    <Container className="register-area">
-      {registrationError && (
-        <div>
-          <Alert variant="danger" className="error-message">
+    <div className="login-container">
+      <div className="login-box">
+        <h1 className="login-title">Sign up for DDB</h1>
+        
+        {registrationError && (
+          <div className="login-error">
             {registrationError}
-          </Alert>
-        </div>
-      )}
-      <Form onSubmit={register}>
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            id="email"
-            placeholder="Enter email"
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            id="name"
-            placeholder="Enter name"
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            id="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm Password"
-            onChange={handleChange}
-            required
-            isInvalid={passwordError}
-          />
-          <Form.Control.Feedback type="invalid">
-            {passwordError}
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Check
-            type="checkbox"
-            label="이용약관에 동의합니다"
-            id="policy"
-            onChange={handleChange}
-            isInvalid={policyError}
-            checked={formData.policy}
-          />
-        </Form.Group>
-        <Button variant="danger" type="submit">
-          회원가입
-        </Button>
-      </Form>
-    </Container>
+          </div>
+        )}
+        
+        <form className="login-form" onSubmit={register}>
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              className="form-input"
+              placeholder="you@example.com"
+              onChange={handleChange}
+              value={formData.email}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="name" className="form-label">Name</label>
+            <input
+              type="text"
+              id="name"
+              className="form-input"
+              placeholder="Your name"
+              onChange={handleChange}
+              value={formData.name}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              className={`form-input ${passwordError && formData.password ? 'error' : ''}`}
+              placeholder="Create a password"
+              onChange={handleChange}
+              value={formData.password}
+              required
+            />
+            {!passwordError && formData.password && formData.password.length < 6 && (
+              <span className="helper-text">Minimum 6 characters.</span>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword" className="form-label">Confirm password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              className={`form-input ${passwordError ? 'error' : ''}`}
+              placeholder="Re-enter your password"
+              onChange={handleChange}
+              value={formData.confirmPassword}
+              required
+            />
+            {passwordError && (
+              <span className="error-text">{passwordError}</span>
+            )}
+          </div>
+
+          <div className="checkbox-group">
+            <input
+              type="checkbox"
+              id="policy"
+              className="checkbox-input"
+              onChange={handleChange}
+              checked={formData.policy}
+            />
+            <label htmlFor="policy" className="checkbox-label">
+              I agree with <a href="#" className="terms-link">terms and conditions</a>
+            </label>
+          </div>
+          {policyError && (
+            <span className="error-text">You must agree to the terms and conditions</span>
+          )}
+
+          <button type="submit" className="login-btn">
+            Sign up
+          </button>
+
+          <div className="signup-link">
+            Already have an account? <Link to="/login">Log in</Link>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 
