@@ -12,7 +12,7 @@ const OrderReceipt = () => {
 
   return (
     <div className="receipt-container">
-      <h3 className="receipt-title">주문 내역</h3>
+      <h3 className="receipt-title">Order Summary</h3>
       <ul className="receipt-list">
         {cartList && cartList.length > 0 ? (
           cartList.map((item) => (
@@ -23,13 +23,13 @@ const OrderReceipt = () => {
                   <div>Size: {item.size.toUpperCase()}</div>
                   <div>Qty: {item.qty}</div>
                 </div>
-                <div>₩ {currencyFormat(item.productId.price * item.qty)}</div>
+                <div>£ {currencyFormat(item.productId.price * item.qty)}</div>
               </div>
             </li>
           ))
         ) : (
           <li>
-            <div>카트가 비어있습니다.</div>
+            <div>Cart is empty</div>
           </li>
         )}
       </ul>
@@ -38,7 +38,7 @@ const OrderReceipt = () => {
           <strong>Total:</strong>
         </div>
         <div>
-          <strong>₩ {currencyFormat(totalPrice)}</strong>
+          <strong>£ {currencyFormat(totalPrice)}</strong>
         </div>
       </div>
       {location.pathname.includes("/cart") && cartList && cartList.length > 0 && (
@@ -47,16 +47,14 @@ const OrderReceipt = () => {
           className="payment-button"
           onClick={() => navigate("/payment")}
         >
-          결제 계속하기
+          Proceed to Payment
         </Button>
       )}
 
       <div>
-        가능한 결제 수단 귀하가 결제 단계에 도달할 때까지 가격 및 배송료는
-        확인되지 않습니다.
+        Please note that prices and shipping costs are not confirmed until you reach the payment stage.
         <div>
-          30일의 반품 가능 기간, 반품 수수료 및 미수취시 발생하는 추가 배송 요금
-          읽어보기 반품 및 환불
+          Read about our 30-day return policy, return fees, and additional shipping costs for non-delivery.
         </div>
       </div>
     </div>

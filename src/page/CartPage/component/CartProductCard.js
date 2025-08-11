@@ -1,6 +1,6 @@
 import React from "react";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { Row, Col, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
 import { currencyFormat } from "../../../utils/number";
@@ -18,11 +18,11 @@ const CartProductCard = ({ item }) => {
 
   return (
     <div className="product-card-cart">
-      <Row>
-        <Col md={2} xs={12}>
-          <img src={item.productId.image} width={112} alt="product" />
-        </Col>
-        <Col md={10} xs={12}>
+      <div className="cart-product-row">
+        <div className="cart-product-image-container">
+          <img src={item.productId.image} alt="product" className="cart-product-image" />
+        </div>
+        <div className="cart-product-details">
           <div className="display-flex space-between">
             <h3>{item.productId.name}</h3>
             <button className="trash-button">
@@ -35,10 +35,10 @@ const CartProductCard = ({ item }) => {
           </div>
 
           <div>
-            <strong>₩ {currencyFormat(item.productId.price)}</strong>
+            <strong>£ {currencyFormat(item.productId.price)}</strong>
           </div>
           <div>Size: {item.size}</div>
-          <div>Total: ₩ {currencyFormat(item.productId.price * item.qty)}</div>
+          <div>Total: £ {currencyFormat(item.productId.price * item.qty)}</div>
           <div>
             Quantity:
             <Form.Select
@@ -61,8 +61,8 @@ const CartProductCard = ({ item }) => {
               <option value={10}>10</option>
             </Form.Select>
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

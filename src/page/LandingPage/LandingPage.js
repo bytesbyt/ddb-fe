@@ -67,7 +67,7 @@ const LandingPage = () => {
         ) : (
           <div className="text-align-center empty-bag">
             {name === "" || name === null ? (
-              <h2>No products registered</h2>
+              <h2>Please sign up to view products</h2>
             ) : (
               <h2>No products matching {name}</h2>
             )}

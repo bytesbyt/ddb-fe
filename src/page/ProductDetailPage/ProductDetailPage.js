@@ -55,7 +55,7 @@ const ProductDetail = () => {
         <Col className="product-info-area" sm={6}>
           <div className="product-info">{selectedProduct.name}</div>
           <div className="product-info">
-            ₩ {currencyFormat(selectedProduct.price)}
+            £ {currencyFormat(selectedProduct.price)}
           </div>
           <div className="product-info">{selectedProduct.description}</div>
 
