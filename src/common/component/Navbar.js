@@ -16,7 +16,6 @@ const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
-  const [showSearchBox, setShowSearchBox] = useState(false);
   const [query] = useSearchParams();
   const [keyword, setKeyword] = useState(query.get("name") || "");
   const menuList = [
@@ -49,29 +48,6 @@ const Navbar = ({ user }) => {
   };
   return (
     <div className="navbar-wrapper">
-      {showSearchBox && (
-        <div className="display-space-between mobile-search-box w-100">
-          <div className="search display-space-between w-100">
-            <div>
-              <FontAwesomeIcon className="search-icon" icon={faSearch} />
-              <input
-                type="text"
-                placeholder="Search"
-                value={keyword}
-                onChange={(event) => setKeyword(event.target.value)}
-                onKeyPress={onCheckEnter}
-              />
-            </div>
-            <button
-              className="closebtn"
-              onClick={() => setShowSearchBox(false)}
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
-      
       <div className="side-menu" style={{ width: width }}>
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;
@@ -152,15 +128,22 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faBox} />
             </div>
             
-            {isMobile && (
-              <div className="nav-icon" onClick={() => setShowSearchBox(true)}>
-                <FontAwesomeIcon icon={faSearch} />
-              </div>
-            )}
           </div>
         </div>
 
         <div className="nav-bottom-row">
+          <div className="mobile-search-container">
+            <div className="search-box">
+              <FontAwesomeIcon icon={faSearch} />
+              <input
+                type="text"
+                placeholder="Search"
+                value={keyword}
+                onChange={(event) => setKeyword(event.target.value)}
+                onKeyPress={onCheckEnter}
+              />
+            </div>
+          </div>
           <div className="nav-menu-left">
             <ul className="menu">
               {menuList.map((menu, index) => (
