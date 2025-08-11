@@ -23,11 +23,24 @@ export const createOrder = createAsyncThunk(
       dispatch(getCartQty())
       return response.data.orderNum;
     }catch (error) {
+      // The error is already extracted as a string by the API interceptor
+      let errorMessage = error || "Failed to create order";
+      
+      // If it's a multi-line error (stock issues), format it better
+      if (typeof errorMessage === 'string' && errorMessage.includes('\n')) {
+        // Replace line breaks with comma and space for toast display
+        errorMessage = errorMessage.replace(/\n/g, ', ').replace(', ,', ',').trim();
+        // Remove trailing comma if exists
+        if (errorMessage.endsWith(',')) {
+          errorMessage = errorMessage.slice(0, -1);
+        }
+      }
+      
       dispatch(showToastMessage({
-        message: error.error,
+        message: errorMessage,
         status: "error",
       }))
-      return rejectWithValue(error.error);
+      return rejectWithValue(error);
     }
   }
 );
