@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  margin-top: 200px;
   background-color: #FAF9F8;
 }
 
@@ -44,7 +45,7 @@
 
 .form-label {
   display: block;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 500;
   margin-bottom: 8px;
   color: #333;
@@ -55,7 +56,7 @@
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 1rem;
   transition: border-color 0.2s;
   background-color: white;
 }
@@ -117,20 +118,20 @@
   font-size: 14px;
 }
 
-/* Google Login Button - Override styles */
+/* Google Login Button  */
 .login-box iframe {
-  width: 100% !important;
+  width: 100%;
 }
 
 .login-box > div > div {
-  width: 100% !important;
+  width: 100% ;
 }
 
 /* Sign Up Link */
 .signup-link {
   text-align: center;
   margin-top: 24px;
-  font-size: 14px;
+  font-size: 1rem;
   color: #666;
 }
 
