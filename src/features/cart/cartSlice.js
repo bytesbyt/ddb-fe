@@ -100,6 +100,7 @@ export const getCartQty = createAsyncThunk(
       if (response.status !== 200) throw new Error(response.error);
       return response.data.qty;
     } catch (error) {
+      dispatch (showToastMessage({ message: error, status: "error"}));
       return rejectWithValue(error.error);
     }
   }
