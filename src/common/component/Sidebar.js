@@ -15,7 +15,7 @@ const Sidebar = () => {
     return (
       <div>
         <Link to="/">
-          <img width={100} src="/image/ddb_logo2.png" alt="hm-logo.png" />
+          <img width={100} src="/image/DDB_logo_black.png" alt="hm-logo.png" />
         </Link>
         <div className="sidebar-item">Admin Account</div>
         <ul className="sidebar-area">

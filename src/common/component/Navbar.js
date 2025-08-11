@@ -8,7 +8,7 @@ import {
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 
@@ -18,46 +18,21 @@ const Navbar = ({ user }) => {
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [query] = useSearchParams();
   const [keyword, setKeyword] = useState(query.get("name") || "");
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const menuList = [
-    "Women",
-    "Divided",
-    "Men",
-    "Kids",
-    "Home",
-    "Sale",
-    "Sustainability",
+    "White Wine",
+    "Red Wine",
+    "Orange Wine",
+    "Rose",
+    "Wine Subscription",
+    "Wholesale",
   ];
-  const rightMenuList = ["Newsletter", "About us"];
+  const rightMenuList = ["Newsletter", "Our Story"];
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
 
   useEffect(() => {
     setKeyword(query.get("name") || "");
   }, [query]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        // Scrolling down & past 80px
-        setIsVisible(false);
-      } else {
-        // Scrolling up or at top
-        setIsVisible(true);
-      }
-      
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]);
 
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
@@ -71,7 +46,7 @@ const Navbar = ({ user }) => {
     dispatch(logout());
   };
   return (
-    <div className={`navbar-wrapper ${isVisible ? 'navbar-visible' : 'navbar-hidden'}`}>
+    <div className="navbar-wrapper">
       <div className="side-menu" style={{ width: width }}>
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;
@@ -106,7 +81,7 @@ const Navbar = ({ user }) => {
           
           <div className="nav-logo">
             <Link to="/">
-              <img src="/image/ddb_logo2.png" alt="DDB" />
+              <img src="/image/DDB_logo_black.png" alt="DDB" />
             </Link>
           </div>
 

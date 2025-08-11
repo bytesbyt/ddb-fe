@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Carousel } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
@@ -35,20 +35,24 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="hero-video-container">
-        <video 
-          className="hero-video"
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-        >
-          <source 
-            src="https://www.net-a-porter.com/content/images/cms/ycm/resource/blob/2672014/5b3241fab57780626773d957e6dfdece/desktop-video-data.mp4" 
-            type="video/mp4" 
-          />
-          Your browser does not support the video tag.
-        </video>
+      <div className="hero-carousel-container">
+        <Carousel controls={true} indicators={true} interval={5000}>
+          <Carousel.Item>
+            <img 
+              className="hero-carousel-image"
+              src="https://www.montywines.co.uk/cdn/shop/products/NaturalOrganicWinessubscription-MontyWines_1024x1024@2x.jpg?v=1597311540"
+              alt="Wine Subscription"
+            />
+          </Carousel.Item>
+      
+          <Carousel.Item>
+            <img 
+              className="hero-carousel-image"
+              src="https://www.montywines.co.uk/cdn/shop/products/NaturalandOrganicWineSubscription-ClubMonty-NaturalWine_1024x1024@2x.jpg?v=1597311540"
+              alt="Wine Collection"
+            />
+          </Carousel.Item>
+        </Carousel>
       </div>
       <Container>
         <Row>
@@ -63,9 +67,9 @@ const LandingPage = () => {
         ) : (
           <div className="text-align-center empty-bag">
             {name === "" || name === null ? (
-              <h2>등록된 상품이 없습니다!</h2>
+              <h2>No products registered</h2>
             ) : (
-              <h2>{name}과 일치한 상품이 없습니다!</h2>
+              <h2>No products matching {name}</h2>
             )}
           </div>
         )}
