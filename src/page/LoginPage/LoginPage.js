@@ -24,13 +24,11 @@ const Login = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    // Clear errors and toast messages
     dispatch(clearErrors());
     dispatch(hideToastMessage());
   }, [dispatch]);
 
   useEffect(() => {
-    // Clear errors when user starts typing
     if (email || password) {
       dispatch(clearErrors());
     }
