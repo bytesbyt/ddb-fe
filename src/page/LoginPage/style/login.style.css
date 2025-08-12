@@ -150,6 +150,7 @@
   .login-box {
     padding: 30px 24px;
     max-width: 100%;
+    padding-top: 160px;
   }
   
   .login-title {
@@ -185,6 +186,7 @@
 @media (max-width: 480px) {
   .login-box {
     padding: 24px 20px;
+    padding-top: 120px;
   }
   
   .login-title {
