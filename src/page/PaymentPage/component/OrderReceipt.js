@@ -41,11 +41,12 @@ const OrderReceipt = () => {
           <strong>£ {currencyFormat(totalPrice)}</strong>
         </div>
       </div>
-      {location.pathname.includes("/cart") && cartList && cartList.length > 0 && (
+      {location.pathname.includes("/cart") && (
         <Button
           variant="dark"
           className="payment-button"
           onClick={() => navigate("/payment")}
+          disabled={!cartList || cartList.length === 0}
         >
           Proceed to Payment
         </Button>
