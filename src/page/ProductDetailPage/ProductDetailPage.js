@@ -71,7 +71,7 @@ const ProductDetail = () => {
               id="dropdown-basic"
               align="start"
             >
-              {size === "" ? "사이즈 선택" : size.toUpperCase()}
+              {size === "" ? "Select Size" : size.toUpperCase()}
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="size-drop-down">
@@ -93,10 +93,10 @@ const ProductDetail = () => {
             </Dropdown.Menu>
           </Dropdown>
           <div className="warning-message">
-            {sizeError && "사이즈를 선택해주세요."}
+            {sizeError && "Please select a size."}
           </div>
           <Button variant="dark" className="add-button" onClick={addItemToCart}>
-            추가
+            Add to Cart
           </Button>
         </Col>
       </Row>

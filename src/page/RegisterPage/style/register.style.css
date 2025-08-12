@@ -7,14 +7,14 @@
 
 .helper-text {
   display: block;
-  font-size: 12px;
+  font-size: 1rem;
   color: #666;
   margin-top: 4px;
 }
 
 .error-text {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   color: #c00;
   margin-top: 4px;
 }
