@@ -10,23 +10,39 @@ const OrderReceipt = () => {
   const navigate = useNavigate();
   const { cartList, totalPrice } = useSelector((state) => state.cart);
 
+  // Check if any item in cart has insufficient stock
+  const hasInsufficientStock = cartList && cartList.some(item => {
+    const stockQuantity = item.productId.stock ? item.productId.stock[item.size] || 0 : 0;
+    return stockQuantity < item.qty;
+  });
+
   return (
     <div className="receipt-container">
       <h3 className="receipt-title">Order Summary</h3>
       <ul className="receipt-list">
         {cartList && cartList.length > 0 ? (
-          cartList.map((item) => (
-            <li key={item._id}>
-              <div className="display-flex space-between">
-                <div>
-                  <div>{item.productId.name}</div>
-                  <div>Size: {item.size.toUpperCase()}</div>
-                  <div>Qty: {item.qty}</div>
+          cartList.map((item) => {
+            const stockQuantity = item.productId.stock ? item.productId.stock[item.size] || 0 : 0;
+            const hasStock = stockQuantity >= item.qty;
+            
+            return (
+              <li key={item._id}>
+                <div className="display-flex space-between">
+                  <div>
+                    <div>{item.productId.name}</div>
+                    <div>Size: {item.size.toUpperCase()}</div>
+                    <div>Qty: {item.qty}</div>
+                    {!hasStock && (
+                      <div style={{ color: 'red', fontSize: '12px' }}>
+                        Out of stock
+                      </div>
+                    )}
+                  </div>
+                  <div>£ {currencyFormat(item.productId.price * item.qty)}</div>
                 </div>
-                <div>£ {currencyFormat(item.productId.price * item.qty)}</div>
-              </div>
-            </li>
-          ))
+              </li>
+            );
+          })
         ) : (
           <li>
             <div>Cart is empty</div>
@@ -42,14 +58,30 @@ const OrderReceipt = () => {
         </div>
       </div>
       {location.pathname.includes("/cart") && (
-        <Button
-          variant="dark"
-          className="payment-button"
-          onClick={() => navigate("/payment")}
-          disabled={!cartList || cartList.length === 0}
-        >
-          Proceed to Payment
-        </Button>
+        <>
+          {hasInsufficientStock && (
+            <div style={{ 
+              backgroundColor: '#ffebee', 
+              color: '#c62828', 
+              padding: '10px', 
+              borderRadius: '5px', 
+              marginBottom: '10px',
+              textAlign: 'center'
+            }}>
+              <strong> Some items in your cart are out of stock</strong>
+              <br />
+              Please remove or update quantities before checkout
+            </div>
+          )}
+          <Button
+            variant="dark"
+            className="payment-button"
+            onClick={() => navigate("/payment")}
+            disabled={!cartList || cartList.length === 0}
+          >
+            Proceed to Payment
+          </Button>
+        </>
       )}
 
       <div>

@@ -16,6 +16,9 @@ const CartProductCard = ({ item }) => {
     dispatch(deleteCartItem(id));
   };
 
+  const stockAvailable = item.productId.stock && item.productId.stock[item.size] >= item.qty;
+  const stockQuantity = item.productId.stock ? item.productId.stock[item.size] || 0 : 0;
+
   return (
     <div className="product-card-cart">
       <div className="cart-product-row">
@@ -39,6 +42,18 @@ const CartProductCard = ({ item }) => {
           </div>
           <div>Size: {item.size}</div>
           <div>Total: £ {currencyFormat(item.productId.price * item.qty)}</div>
+          <div>
+            {!stockAvailable && (
+              <div style={{ color: 'red', fontWeight: 'bold', marginBottom: '5px' }}>
+                Insufficient stock! Only {stockQuantity} available
+              </div>
+            )}
+            {stockAvailable && stockQuantity <= 5 && (
+              <div style={{ color: 'orange', marginBottom: '5px' }}>
+                Only {stockQuantity} left in stock
+              </div>
+            )}
+          </div>
           <div>
             Quantity:
             <Form.Select

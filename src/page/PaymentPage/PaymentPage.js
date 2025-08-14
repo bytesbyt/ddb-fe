@@ -47,6 +47,19 @@ const PaymentPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    
+    // Check if any item has insufficient stock before submitting
+    const hasInsufficientStock = cartList.some(item => {
+      const stockQuantity = item.productId.stock ? item.productId.stock[item.size] || 0 : 0;
+      return stockQuantity < item.qty;
+    });
+    
+    if (hasInsufficientStock) {
+      alert("Some items in your cart are out of stock. Please go back to cart and update quantities.");
+      navigate("/cart");
+      return;
+    }
+    
     // 오더 생성하기
     const {firstName, lastName, contact, address, city, postalCode} = shipInfo;
     const shipTo = {
