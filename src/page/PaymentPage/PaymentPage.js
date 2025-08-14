@@ -49,13 +49,18 @@ const PaymentPage = () => {
     event.preventDefault();
     
     // Check if any item has insufficient stock before submitting
-    const hasInsufficientStock = cartList.some(item => {
+    const outOfStockItems = cartList.filter(item => {
       const stockQuantity = item.productId.stock ? item.productId.stock[item.size] || 0 : 0;
       return stockQuantity < item.qty;
     });
     
-    if (hasInsufficientStock) {
-      alert("Some items in your cart are out of stock. Please go back to cart and update quantities.");
+    if (outOfStockItems.length > 0) {
+      const outOfStockMessages = outOfStockItems.map(item => {
+        const stockQuantity = item.productId.stock ? item.productId.stock[item.size] || 0 : 0;
+        return `${item.productId.name} (Size: ${item.size.toUpperCase()}) - Only ${stockQuantity} available, but you requested ${item.qty}`;
+      });
+      
+      alert(`The following items are out of stock:\n\n${outOfStockMessages.join('\n')}\n\nPlease go back to cart and update quantities.`);
       navigate("/cart");
       return;
     }
