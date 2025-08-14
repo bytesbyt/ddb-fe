@@ -19,10 +19,10 @@ const Navbar = ({ user }) => {
   const [query] = useSearchParams();
   const [keyword, setKeyword] = useState(query.get("name") || "");
   const menuList = [
-    "White Wine",
-    "Red Wine",
-    "Orange Wine",
+    "Red",
+    "White",
     "Rose",
+    "Sparkling",
     "Wine Subscription",
     "Wholesale",
   ];
