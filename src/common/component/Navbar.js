@@ -45,6 +45,20 @@ const Navbar = ({ user }) => {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  const handleCategoryClick = (category) => {
+
+    const wineCategories = ["Red", "White", "Rose", "Sparkling"];
+    
+    if (wineCategories.includes(category)) {
+
+      navigate(`/?page=1&category=${category.toLowerCase()}`);
+      setWidth(0); 
+    } else {
+      navigate('/?page=1');
+
+    }
+  };
   return (
     <div className="navbar-wrapper">
       <div className="side-menu" style={{ width: width }}>
@@ -58,7 +72,9 @@ const Navbar = ({ user }) => {
         </div>
         <div className="side-menu-list" id="menu-list">
           {menuList.map((menu, index) => (
-            <button key={index}>{menu}</button>
+            <button key={index} onClick={() => handleCategoryClick(menu)}>
+              {menu}
+            </button>
           ))}
           <div className="side-menu-divider"></div>
           {rightMenuList.map((menu, index) => (
@@ -147,7 +163,13 @@ const Navbar = ({ user }) => {
             <ul className="menu">
               {menuList.map((menu, index) => (
                 <li key={index}>
-                  <span className="menu-link">{menu}</span>
+                  <span 
+                    className="menu-link" 
+                    onClick={() => handleCategoryClick(menu)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {menu}
+                  </span>
                 </li>
               ))}
             </ul>

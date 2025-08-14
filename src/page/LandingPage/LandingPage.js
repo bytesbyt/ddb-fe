@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard";
-import { Row, Col, Container, Carousel } from "react-bootstrap";
+import { Row, Col, Container, Carousel, Button } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
@@ -10,9 +10,12 @@ import LoadingSpinner from "../../common/component/LoadingSpinner";
 const LandingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { productList, totalPageNum, loading } = useSelector((state) => state.product);
+  const { productList, totalPageNum, loading } = useSelector(
+    (state) => state.product
+  );
   const [query] = useSearchParams();
   const name = query.get("name");
+  const category = query.get("category");
   const page = query.get("page") || 1;
 
   useEffect(() => {
@@ -20,6 +23,7 @@ const LandingPage = () => {
       getProductList({
         page: page,
         name: name || "",
+        category: category || "",
       })
     );
   }, [query, dispatch]);
@@ -30,6 +34,9 @@ const LandingPage = () => {
     if (name) {
       searchParams.set("name", name);
     }
+    if (category) {
+      searchParams.set("category", category);
+    }
     navigate("?" + searchParams.toString());
   };
 
@@ -38,15 +45,15 @@ const LandingPage = () => {
       <div className="hero-carousel-container">
         <Carousel controls={true} indicators={true} interval={5000}>
           <Carousel.Item>
-            <img 
+            <img
               className="hero-carousel-image"
               src="https://www.montywines.co.uk/cdn/shop/products/NaturalOrganicWinessubscription-MontyWines_1024x1024@2x.jpg?v=1597311540"
               alt="Wine Subscription"
             />
           </Carousel.Item>
-      
+
           <Carousel.Item>
-            <img 
+            <img
               className="hero-carousel-image"
               src="https://www.montywines.co.uk/cdn/shop/products/NaturalandOrganicWineSubscription-ClubMonty-NaturalWine_1024x1024@2x.jpg?v=1597311540"
               alt="Wine Collection"
@@ -55,50 +62,62 @@ const LandingPage = () => {
         </Carousel>
       </div>
       <Container>
-        <Row>
-        {loading ? (
-          <LoadingSpinner />
-        ) : productList.length > 0 ? (
-          productList.map((item) => (
-            <Col md={3} sm={12} key={item._id}>
-              <ProductCard item={item} />
-            </Col>
-          ))
-        ) : (
-          <div className="text-align-center empty-bag">
-            {name === "" || name === null ? (
-              <h2>Please sign up to view products</h2>
-            ) : (
-              <h2>No products matching {name}</h2>
-            )}
+        {category && (
+          <div className="category-filter-info">
+            <h4 className="category-filter-info-title">{category} Wines</h4>
+            <Button
+              variant="outline-dark"
+              size="sm"
+              onClick={() => navigate("/?page=1")}
+            >
+              Show All Wines
+            </Button>
           </div>
         )}
-      </Row>
-      {productList.length > 0 && totalPageNum > 1 && (
-        <ReactPaginate
-          nextLabel=""
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={3}
-          marginPagesDisplayed={1}
-          pageCount={totalPageNum}
-          forcePage={page - 1}
-          previousLabel=""
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item previous"
-          previousLinkClassName="page-link"
-          nextClassName="page-item next"
-          nextLinkClassName="page-link"
-          breakLabel="..."
-          breakClassName="page-item break"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-          disabledClassName="disabled"
-        />
-      )}
-    </Container>
+        <Row>
+          {loading ? (
+            <LoadingSpinner />
+          ) : productList.length > 0 ? (
+            productList.map((item) => (
+              <Col md={3} sm={12} key={item._id}>
+                <ProductCard item={item} />
+              </Col>
+            ))
+          ) : (
+            <div className="text-align-center empty-bag">
+              {name === "" || name === null ? (
+                <h2>Please sign up to view products</h2>
+              ) : (
+                <h2>No products matching {name}</h2>
+              )}
+            </div>
+          )}
+        </Row>
+        {productList.length > 0 && totalPageNum > 1 && (
+          <ReactPaginate
+            nextLabel=""
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            marginPagesDisplayed={1}
+            pageCount={totalPageNum}
+            forcePage={page - 1}
+            previousLabel=""
+            renderOnZeroPageCount={null}
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item previous"
+            previousLinkClassName="page-link"
+            nextClassName="page-item next"
+            nextLinkClassName="page-link"
+            breakLabel="..."
+            breakClassName="page-item break"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            disabledClassName="disabled"
+          />
+        )}
+      </Container>
     </>
   );
 };
