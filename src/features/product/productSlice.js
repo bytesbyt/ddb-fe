@@ -8,8 +8,6 @@ export const getProductList = createAsyncThunk(
   async (query, { rejectWithValue }) => {
     try {
       const response = await api.get("/product", { params: { ...query } });
-
-      if (response.status !== 200) throw new Error(response.error);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.error);
@@ -22,7 +20,6 @@ export const getProductDetail = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await api.get(`/product/${id}`);
-      if (response.status !== 200) throw new Error(response.error);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -60,7 +57,6 @@ export const deleteProduct = createAsyncThunk(
   async (id, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.delete(`/product/${id}`);
-      if (response.status !== 200) throw new Error(response.error);
       dispatch(
         showToastMessage({
           message: "Product deleted successfully",
@@ -86,7 +82,6 @@ export const editProduct = createAsyncThunk(
   async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.put(`/product/${id}`, formData);
-      if (response.status !== 200) throw new Error(response.error);
       dispatch(
         showToastMessage({
           message: "Product updated successfully",

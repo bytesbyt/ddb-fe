@@ -118,16 +118,12 @@
   font-size: 14px;
 }
 
-/* Google Login Button  */
-.login-box iframe {
-  width: 100%;
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
 }
 
-.login-box > div > div {
-  width: 100% ;
-}
-
-/* Sign Up Link */
 .signup-link {
   text-align: center;
   margin-top: 24px;
@@ -145,7 +141,6 @@
   color: #333;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .login-box {
     padding: 30px 24px;

@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./style/login.style.css";
-import { loginWithEmail, clearErrors } from "../../features/user/userSlice";
+import { loginWithEmail, clearErrors, loginWithGoogle } from "../../features/user/userSlice";
 import { hideToastMessage } from "../../features/common/uiSlice";
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Redirect if user is already logged in
     if (user || sessionStorage.getItem("token")) {
       navigate("/");
     }
@@ -39,23 +39,22 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async (googleData) => {
-    //구글 로그인 하기
+    //google login
+    dispatch(loginWithGoogle(googleData.credential));
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
         <h1 className="login-title">Log in</h1>
-        
-        {loginError && (
-          <div className="login-error">
-            {loginError}
-          </div>
-        )}
-        
+
+        {loginError && <div className="login-error">{loginError}</div>}
+
         <form className="login-form" onSubmit={handleLoginWithEmail}>
           <div className="form-group">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
             <input
               id="email"
               type="email"
@@ -68,7 +67,9 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
             <input
               id="password"
               type="password"
@@ -88,18 +89,20 @@ const Login = () => {
             <span>or sign in with</span>
           </div>
 
-          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-            <GoogleLogin
-              onSuccess={handleGoogleLogin}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-              text="signin_with"
-              shape="rectangular"
-              size="large"
-              theme="outline"
-            />
-          </GoogleOAuthProvider>
+          <div className="google-login-wrapper">
+            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => {
+                
+                }}
+                text="signin_with"
+                shape="rectangular"
+                size="large"
+                theme="outline"
+              />
+            </GoogleOAuthProvider>
+          </div>
 
           <div className="signup-link">
             Don't have an account? <Link to="/register">Sign up</Link>

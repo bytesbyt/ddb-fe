@@ -9,7 +9,7 @@ export const loginWithEmail = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const response = await api.post("/auth/login", {email,password});
-      // Store token in sessionStorage
+
       if (response.data.token) {
         sessionStorage.setItem("token", response.data.token);
       }
@@ -23,7 +23,15 @@ export const loginWithEmail = createAsyncThunk(
 
 export const loginWithGoogle = createAsyncThunk(
   "user/loginWithGoogle",
-  async (token, { rejectWithValue }) => {}
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/auth/google", {token});
+      sessionStorage.setItem("token", response.data.token);
+      return response.data.user;
+    } catch(error){
+      return rejectWithValue(error);
+    }
+  }
 );
 
 export const logout = () => (dispatch) => {
@@ -40,7 +48,6 @@ export const registerUser = createAsyncThunk(
   ) => {
     try {
       const response = await api.post("/user", {email, name, password});
-      console.log("RESPONSE", response);
       dispatch(
         showToastMessage({
           message: "Successfully registered",
@@ -122,6 +129,18 @@ const userSlice = createSlice({
     })
     .addCase(loginWithToken.fulfilled, (state, action) => {
       state.user = action.payload.user;
+    })
+    .addCase(loginWithGoogle.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(loginWithGoogle.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+      state.loginError = null;
+    })
+    .addCase(loginWithGoogle.rejected, (state, action) => {
+      state.loading = false;
+      state.loginError = action.payload;
     })
   },
 });

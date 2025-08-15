@@ -16,18 +16,21 @@ export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ id, size }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.post("/cart", {productId: id, size, qty: 1});
-      if (response.status !== 200)  throw new Error(response.error);
-      dispatch (showToastMessage ({
-        message: "Added to cart",
-        status: "success",
-      }))
+      const response = await api.post("/cart", { productId: id, size, qty: 1 });
+      dispatch(
+        showToastMessage({
+          message: "Added to cart",
+          status: "success",
+        })
+      );
       return response.data.cartItemQty;
     } catch (error) {
-      dispatch(showToastMessage({
-        message: error.error || "Failed to add to cart",
-        status: "error",
-      }))
+      dispatch(
+        showToastMessage({
+          message: error.error || "Failed to add to cart",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -38,13 +41,14 @@ export const getCartList = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.get("/cart");
-      if (response.status !== 200) throw new Error(response.error);
       return response.data.data;
     } catch (error) {
-      dispatch(showToastMessage({
-        message: error.error || "Failed to get cart list",
-        status: "error",
-      }));
+      dispatch(
+        showToastMessage({
+          message: error.error || "Failed to get cart list",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -55,17 +59,20 @@ export const deleteCartItem = createAsyncThunk(
   async (id, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.delete(`/cart/${id}`);
-      if (response.status !== 200) throw new Error(response.error);
-      dispatch(showToastMessage({
-        message: "Item removed from cart",
-        status: "success",
-      }));
+      dispatch(
+        showToastMessage({
+          message: "Item removed from cart",
+          status: "success",
+        })
+      );
       return { deletedItemId: id, cartItemQty: response.data.cartItemQty };
     } catch (error) {
-      dispatch(showToastMessage({
-        message: error.error || "Failed to remove item from cart",
-        status: "error",
-      }));
+      dispatch(
+        showToastMessage({
+          message: error.error || "Failed to remove item from cart",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -76,17 +83,20 @@ export const updateQty = createAsyncThunk(
   async ({ id, value }, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.put(`/cart/${id}`, { qty: value });
-      if (response.status !== 200) throw new Error(response.error);
-      dispatch(showToastMessage({
-        message: "Quantity updated",
-        status: "success",
-      }));
+      dispatch(
+        showToastMessage({
+          message: "Quantity updated",
+          status: "success",
+        })
+      );
       return response.data.data;
     } catch (error) {
-      dispatch(showToastMessage({
-        message: error.error || "Failed to update quantity",
-        status: "error",
-      }));
+      dispatch(
+        showToastMessage({
+          message: error.error || "Failed to update quantity",
+          status: "error",
+        })
+      );
       return rejectWithValue(error.error);
     }
   }
@@ -97,10 +107,8 @@ export const getCartQty = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.get("/cart/qty");
-      if (response.status !== 200) throw new Error(response.error);
       return response.data.qty;
     } catch (error) {
-      // dispatch (showToastMessage({ message: error, status: "error"}));
       return rejectWithValue(error.error);
     }
   }
@@ -113,7 +121,6 @@ const cartSlice = createSlice({
     initialCart: (state) => {
       state.cartItemCount = 0;
     },
-    // You can still add reducers here for non-async actions if necessary
   },
 
   extraReducers: (builder) => {
@@ -138,7 +145,8 @@ const cartSlice = createSlice({
       state.cartList = action.payload;
       state.cartItemCount = action.payload.length;
       state.totalPrice = action.payload.reduce(
-        (total, item) => total + item.productId.price * item.qty, 0
+        (total, item) => total + item.productId.price * item.qty,
+        0
       );
     });
     builder.addCase(getCartList.rejected, (state, action) => {
@@ -155,10 +163,13 @@ const cartSlice = createSlice({
       state.loading = false;
       state.error = "";
       const deletedItemId = action.payload.deletedItemId;
-      state.cartList = state.cartList.filter(item => item._id !== deletedItemId);
+      state.cartList = state.cartList.filter(
+        (item) => item._id !== deletedItemId
+      );
       state.cartItemCount = action.payload.cartItemQty;
       state.totalPrice = state.cartList.reduce(
-        (total, item) => total + item.productId.price * item.qty, 0
+        (total, item) => total + item.productId.price * item.qty,
+        0
       );
     });
     builder.addCase(deleteCartItem.rejected, (state, action) => {
@@ -174,7 +185,8 @@ const cartSlice = createSlice({
       state.cartList = action.payload;
       state.cartItemCount = action.payload.length;
       state.totalPrice = action.payload.reduce(
-        (total, item) => total + item.productId.price * item.qty, 0
+        (total, item) => total + item.productId.price * item.qty,
+        0
       );
     });
     builder.addCase(updateQty.rejected, (state, action) => {

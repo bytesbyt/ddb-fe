@@ -90,8 +90,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("formData", formData);
-    console.log("stock", stock);
     //재고를 입력했는지 확인, 아니면 에러
     if (stock.length === 0) {
       return setStockError(true);
@@ -106,8 +104,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
     // Extract sizes from stock array to create size array
     const sizeArray = stock.map(item => item[0]);
-    console.log("sizeArray", sizeArray);
-
+    
     
     if (mode === "new") {
       //새 상품 만들기
